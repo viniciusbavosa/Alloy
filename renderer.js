@@ -161,21 +161,24 @@ function templateFn(platform, username, posts) {
   const platforms = {
     twitter: `
     <sl-card class="card-header">
-      <a href="https://x.com/${username}"><div slot="header" target="_blank">
+    <div slot="header" target="_blank">
+    <a href="https://x.com/${username}">
     ${platform} - ${username}
-      <sl-icon-button id="remove-profile-button" name="trash" label="trash" title="Excluir usuário"></sl-icon-button>
+    </a>
+      <sl-icon-button class="remove-profile-button" name="trash" label="trash" title="Excluir usuário">
+      </sl-icon-button>
     </div>
 
     ${posts}
-    </a>
   </sl-card>
   `,
     bluesky: `
     <sl-card class="card-header">
-      <a href="https://bsky.app/profile/${username}" target="_blank">
-  <div slot="header">
+    <div slot="header">
+    <a href="https://bsky.app/profile/${username}" target="_blank">
   ${platform} - ${username}
-    <sl-icon-button id="remove-profile-button" name="trash" label="trash" title="Excluir usuário"></sl-icon-button>
+  </a>
+    <sl-icon-button class="remove-profile-button" name="trash" label="trash" title="Excluir usuário"></sl-icon-button>
   </div>
 
   ${posts}
