@@ -3,6 +3,9 @@ import Cache from "./cache/index.js";
 const { cacheErrors, setCache, getCache, isCached, deleteCache, clearCache } =
   Cache();
 
+const { handleAddProfile, handleDeleteProfile, handleUpdateEvent } =
+  HandleEvents();
+
 const rateLimitStatus = {
   twitter: false,
   bluesky: false,
@@ -39,51 +42,68 @@ Menu de Navegação
 
 */
 
-const addButton = document.getElementById("add-profile-button");
-const trashButtonList = document.querySelectorAll("#remove-profile-button");
-const updateBttn = document.querySelector(".refresh-bttn");
+function HandleEvents() {
+  const username = document.getElementById("add-username");
 
-const username = document.getElementById("add-username");
+  const handleAddProfile = () => {
+    const addButton = document.getElementById("add-profile-button");
 
-/*
-  Realiza a ação de adicionar perfil
-  quando o usuário aperta 'ENTER'
-*/
-username.addEventListener("keyup", (e) => {
-  if (e.key === "Enter") {
-    addProfile();
-    username.value = "";
-  }
-});
+    // Lida com os eventos de clique do botão 'Adicionar perfil'
+    addButton.addEventListener("click", () => {
+      addProfile();
+      username.value = "";
+    });
 
-// Lida com os eventos de clique do botão 'Adicionar perfil'
-addButton.addEventListener("click", () => {
-  addProfile();
-  username.value = "";
-});
+    /*
+      Realiza a ação de adicionar perfil
+      quando o usuário aperta 'ENTER'
+    */
+    username.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") {
+        addProfile();
+        username.value = "";
+      }
+    });
+  };
 
-// Lida com a exclusão de perfis do banco de dados
-for (const trashBttn of trashButtonList) {
-  trashBttn.addEventListener("click", (event) => {
-    const sucessToast = document.querySelector(".toast-success");
-    const text = event.target.nextSibling.parentElement.innerText;
-    const [platform, username] = text.split(" - ").map((s) => s.trim());
-    removeProfile(platform, username);
+  const handleDeleteProfile = () => {
+    const trashButtonList = document.querySelectorAll(".remove-profile-button");
+    // Lida com a exclusão de perfis do banco de dados
 
-    sucessToast.toast();
-  });
+    for (const trashBttn of trashButtonList) {
+      trashBttn.addEventListener("click", (event) => {
+        const sucessToast = document.querySelector(".toast-success");
+        const text = event.target.nextSibling.parentElement.innerText;
+        const [platform, username] = text.split(" - ").map((s) => s.trim());
+        removeProfile(platform, username);
+
+        sucessToast.toast();
+      });
+    }
+  };
+
+  const handleUpdateEvent = () => {
+    const updateBttn = document.querySelector(".refresh-bttn");
+    // Lida com os eventos de clique do botão 'Atualizar'
+    updateBttn.addEventListener("click", updateFeed);
+  };
+
+  return {
+    handleAddProfile,
+    handleDeleteProfile,
+    handleUpdateEvent,
+  };
 }
 
-// Lida com os eventos de clique do botão 'Atualizar'
-updateBttn.addEventListener("click", updateFeed);
+document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("click", (event) => {
+    const target = event.target;
 
-document.addEventListener("click", (event) => {
-  const target = event.target;
-
-  if (target.tagName === "a") {
-    event.preventDefault();
-    window.electron.openExternalLink(target.href);
-  }
+    if (target.tagName === "a") {
+      event.preventDefault();
+      window.electron.openExternalLink(target.href);
+    }
+  });
 });
 
 /* 
@@ -182,7 +202,6 @@ function templateFn(platform, username, posts) {
   </div>
 
   ${posts}
-  </a>
 </sl-card>
 
 `,
@@ -336,12 +355,7 @@ async function addProfile() {
   const platform = document.getElementById("add-platform").value;
   const username = document.getElementById("add-username").value;
 
-  if (!username) {
-    displayError([
-      { status: 400, message: "Campo de usuário não pode estar vazio" },
-    ]);
-    return;
-  }
+  if (!username) return;
   const regex = /[\^@]/g;
   const formatUsername = username.replace(regex, "").trim();
 
@@ -389,6 +403,9 @@ function clearFeed() {
 */
 
 async function loadFeed() {
+  handleAddProfile();
+
+  handleUpdateEvent();
   const profiles = await window.electronAPI.getProfiles();
   const feed = document.getElementById("feed");
 
@@ -409,6 +426,7 @@ async function loadFeed() {
       getMorePosts(generator, feed, profile);
 
       feed.innerHTML += templateFn(profile.platform, profile.username, text);
+      handleDeleteProfile();
     } else {
       const cachedPosts = getCache(profile.platform, profile.username);
 
@@ -419,8 +437,10 @@ async function loadFeed() {
       getMorePosts(generator, feed, profile);
 
       feed.innerHTML += templateFn(profile.platform, profile.username, text);
+      handleDeleteProfile();
     }
   });
+  handleDeleteProfile();
 }
 
 window.onload = loadFeed;
