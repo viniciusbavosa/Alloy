@@ -1,15 +1,133 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="sl-theme-dark">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <!-- <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.0/cdn/themes/dark.css" />
   <title>Alloy</title>
+  <style>
+    body {
+      font-family: "Mukta", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    .alert-error,
+    .alert-limit {
+      margin-block-start: .5rem;
+    }
+
+    .add-profile,
+    .remove-profile {
+      width: fit-content;
+      margin: 1rem;
+
+
+      &>*+* {
+        margin-block-start: .5rem;
+      }
+    }
+
+    .refresh-bttn,
+    .more-bttn {
+      display: block;
+      width: fit-content;
+      margin: 1rem auto;
+    }
+
+    .feed-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 14px;
+      align-items: center;
+
+      &>* {
+        margin-block: .5rem;
+      }
+    }
+
+    .card-header {
+      width: 80%;
+    }
+
+    .card-header [slot='header'] {
+      display: flex;
+      align-items: center;
+      font-size: 1.6rem;
+    }
+
+    .footer {
+      display: block;
+      width: fit-content;
+      margin: 0 auto;
+    }
+  </style>
 </head>
-<body>
-  <h1>
-    Hello from Alloy!
-  </h1>
+
+<body id="body">
+  <div class="error-wrapper"></div>
+  <sl-alert variant="warning" open closable class="alert-limit">
+    <sl-icon slot="icon" name="exclamation-octagon"></sl-icon>
+    <strong>Informações Adicionais</strong><br />
+    Informamos que a API do X impõe fortes restrições que podem afetar sua experiência. No momento, você pode fazer
+    apenas 3 buscas a cada ~15 minutos. Lamentamos pela falta de interesse do X em permitir uma utilização mais ampla de
+    sua plataforma.
+  </sl-alert>
+  <main>
+    <section>
+      <h1 class="title">Alloy - Social Media Hub</h1>
+      <div class="add-profile">
+        <sl-select id="add-platform" label="Selecione uma plataforma" value="twitter">
+          <sl-option value="twitter">Twitter</sl-option>
+          <sl-option value="bluesky">Bluesky</sl-option>
+        </sl-select>
+        <sl-input id="add-username" help-text="Digite o nome de usuário da sua conta favorita"
+          placeholder="E.g., @g1, @g1portal.bsky.social"></sl-input>
+        <sl-button id="add-profile-button">Adicionar Perfil</sl-button>
+      </div>
+
+      <div class="api-limits-wrapper"></div>
+
+      <sl-button variant="default" class="refresh-bttn">
+        <sl-icon slot="suffix" name="arrow-counterclockwise"></sl-icon>
+        Atualizar
+      </sl-button>
+      <div id="feed" class="feed-container"></div>
+      <sl-button class="more-bttn">
+        <sl-icon slot="suffix" name="plus"></sl-icon>
+        Mais
+      </sl-button>
+      <sl-alert class="toast-success" variant="success" duration="3000" closable>
+        <sl-icon slot="icon" name="check2-circle"></sl-icon>
+        <strong>Perfil deletado com sucesso</strong><br />
+        Os posts desse perfil não serão mais exibidos
+      </sl-alert>
+    </section>
+    <small class="footer">&copy; <span id="year"></span> Vinicius Bavosa. Disponível sob a licença MIT.</small>
+  </main>
+  <script type="module" src="./renderer.js"></script>
+  <script type="module"
+    src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.0/cdn/shoelace-autoloader.js"></script>
+  <script type="module">document.getElementById("year").textContent = new Date().getFullYear();</script>
+
 </body>
+
 </html>

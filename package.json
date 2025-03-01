@@ -1,17 +1,47 @@
 {
-  "name": "BlueX",
+  "name": "alloy",
+  "productName": "Alloy",
   "version": "1.0.0",
-  "description": "Oi",
+  "description": "Um hub para suas redes sociais. Acompanhe e interaja com seus perfis favoritos em um só lugar, de forma prática e organizada",
   "main": "main.js",
-  "type": "module",
-  "scripts": {
-    "start": "electron ."
+  "build": {
+    "appId": "com.alloy.app",
+    "extraFiles": [
+      {
+        "from": ".env",
+        "to": ".env"
+      }
+    ],
+    "win": {
+      "icon": "assets/alloy_icon.ico"
+    },
+    "linux": {
+      "icon": "assets/"
+    }
   },
-  "keywords": [],
+  "scripts": {
+    "dev": "electron main.js",
+    "build": "electron-builder build"
+  },
+  "keywords": [
+    "hub",
+    "social media",
+    "feed",
+    "aggregator",
+    "twitter",
+    "bluesky"
+  ],
   "author": "Vinicius Bavosa",
-  "license": "ISC",
+  "license": "MIT",
   "packageManager": "pnpm@9.12.1+sha512.e5a7e52a4183a02d5931057f7a0dbff9d5e9ce3161e33fa68ae392125b79282a8a8a470a51dfc8a0ed86221442eb2fb57019b0990ed24fab519bf0e1bc5ccfc4",
   "devDependencies": {
-    "electron": "^32.2.0"
+    "electron": "^34.0.1",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.13.12",
+    "better-sqlite3": "^11.8.1",
+    "dotenv": "^16.4.7",
+    "rotating-file-stream": "^3.2.6"
   }
 }
