@@ -1,6 +1,8 @@
-# Alloy - Your Social Media Hub
+<h1 style="text-align: center;">Alloy - Your Social Media Hub</h1>
 
-Follow and manage your favorite profiles all in one place, easily and efficiently. Currently, Alloy supports Twitter and BlueSky.
+<img src="https://i.imgur.com/qrxdldK.gif" style="border-radius: 8px; border: 2px solid #FEFEFE50"></img>
+
+<h3 style="text-align: center; font-style: bold;">Follow and manage your favorite profiles all in one place, easily and efficiently. Currently, Alloy supports Twitter and BlueSky.</h3>
 
 Build with Electron, <a href="https://shoelace.style/">Shoelace Web Components</a> and SQLite
 
